@@ -141,11 +141,13 @@ class Module0UI(BaseModuleUI):
         # ================= 输出 =================
         self.out_shore = self.add_file_row(self.output_layout, 0, "河岸线 (.shp):",
                                            "../data/intermediate_data/河岸线.shp", False)
-        self.out_lbank = self.add_file_row(self.output_layout, 1, "左河岸点 (.shp):",
+        self.out_polygon = self.add_file_row(self.output_layout, 1, "河道边界 (.shp):",
+                                             "../data/intermediate_data/河道边界.shp", False)
+        self.out_lbank = self.add_file_row(self.output_layout, 2, "左河岸点 (.shp):",
                                            "../data/intermediate_data/左河岸点.shp", False)
-        self.out_rbank = self.add_file_row(self.output_layout, 2, "右河岸点 (.shp):",
+        self.out_rbank = self.add_file_row(self.output_layout, 3, "右河岸点 (.shp):",
                                            "../data/intermediate_data/右河岸点.shp", False)
-        self.out_prof = self.add_file_row(self.output_layout, 3, "剖面点 (.shp):",
+        self.out_prof = self.add_file_row(self.output_layout, 4, "剖面点 (.shp):",
                                           "../data/intermediate_data/剖面点.shp", False)
 
         # ================= 参数设置 =================
@@ -262,6 +264,7 @@ class Module0UI(BaseModuleUI):
                 self.out_lbank.text(),
                 self.out_rbank.text(),
                 self.out_prof.text(),
+                self.out_polygon.text(),
 
                 self.bank_x.currentText(),
                 self.bank_y.currentText(),

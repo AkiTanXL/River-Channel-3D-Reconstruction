@@ -3,7 +3,7 @@ import re
 import numpy as np
 import geopandas as gpd
 import pandas as pd
-from shapely.geometry import Point, LineString
+from shapely.geometry import Point, LineString, Polygon
 import warnings
 import logging
 
@@ -22,9 +22,10 @@ def preprocess_data(
     input_bank_points: str,
     input_profile_points: str,
     output_shoreline: str,
-    output_left_bank_points: str,      # 新增：左岸点输出路径
-    output_right_bank_points: str,     # 新增：右岸点输出路径
+    output_left_bank_points: str,
+    output_right_bank_points: str,
     output_profile_points: str,
+    output_channel_polygon: str,
     bank_x_field: str,
     bank_y_field: str,
     bank_z_field: str,
@@ -68,7 +69,13 @@ def preprocess_data(
         剖面点中存储原始ID的字段名（应包含数字，如 "NTH035"，数字部分将被提取为剖面编号）
     """
     # 确保输出目录存在
-    for path in [output_shoreline, output_left_bank_points, output_right_bank_points, output_profile_points]:
+    for path in [
+        output_shoreline,
+        output_left_bank_points,
+        output_right_bank_points,
+        output_profile_points,
+        output_channel_polygon
+    ]:
         os.makedirs(os.path.dirname(path), exist_ok=True)
 
     # ------------------------------------------------------------------
@@ -161,6 +168,47 @@ def preprocess_data(
         'geometry': [left_line, right_line]
     }, crs=gdf_shore.crs)
     gdf_shore_out.to_file(output_shoreline, encoding='utf-8')
+
+    # ------------------------------------------------------------------
+    # 1.1 生成河道边界面（Polygon）
+    # ------------------------------------------------------------------
+
+    left_coords = list(left_line.coords)
+    right_coords = list(right_line.coords)
+
+    # 【新增修复逻辑】：判断左右岸线数字化（绘制）方向是否一致
+    # 比较“左岸起点到右岸起点”的距离 与 “左岸起点到右岸终点”的距离
+    pt_left_start = np.array(left_coords[0])
+    pt_right_start = np.array(right_coords[0])
+    pt_right_end = np.array(right_coords[-1])
+
+    dist_start2start = np.linalg.norm(pt_left_start - pt_right_start)
+    dist_start2end = np.linalg.norm(pt_left_start - pt_right_end)
+
+    if dist_start2start > dist_start2end:
+        # 如果左岸起点离右岸终点更近，说明原始两条河岸线的绘制方向相反
+        # 此时需要翻转右岸点序，强制其与左岸方向一致
+        right_coords = right_coords[::-1]
+
+    # 右岸反向拼接形成闭合环（此时 left_coords 和 right_coords 走向必定一致）
+    # 拼接逻辑：左岸起点 -> 左岸终点 -> 右岸终点 -> 右岸起点
+    ring_coords = left_coords + right_coords[::-1]
+
+    # 确保闭合
+    if ring_coords[0] != ring_coords[-1]:
+        ring_coords.append(ring_coords[0])
+
+    channel_polygon = Polygon(ring_coords)
+
+    gdf_channel = gpd.GeoDataFrame(
+        {'id': [1]},
+        geometry=[channel_polygon],
+        crs=gdf_shore.crs
+    )
+
+    gdf_channel.to_file(output_channel_polygon, encoding='utf-8')
+
+    logger.info("河道边界面生成完成。")
 
     # ------------------------------------------------------------------
     # 2. 处理河岸点：读取、归类、排序、生成新ID，分别输出左右岸文件
@@ -281,6 +329,7 @@ def main():
     output_left_bank_points = "../data/intermediate_data/左河岸点.shp"
     output_right_bank_points = "../data/intermediate_data/右河岸点.shp"
     output_profile_points = "../data/intermediate_data/剖面点.shp"
+    output_channel_polygon = "../data/intermediate_data/河道边界.shp"
 
     # 字段名配置（请根据实际数据调整）
     bank_x_field = "东坐标"
@@ -300,6 +349,7 @@ def main():
             output_left_bank_points,
             output_right_bank_points,
             output_profile_points,
+            output_channel_polygon,
             bank_x_field,
             bank_y_field,
             bank_z_field,
