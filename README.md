@@ -234,34 +234,6 @@ RC3DR/
 2. **最终结果** (`data/result/`)
    - 用于存储最终输出的DEM文件（当模块4实现后）
 
-## 使用指南
-
-### 1. 准备数据
-
-将原始数据文件放置在 `data/raw_data/` 目录下：
-- `河岸线.shp` (及相关文件 .shx, .dbf, .prj)
-- `实测河岸点.shp` (及相关文件)
-- `剖面点.shp` (及相关文件)
-
-### 2. 运行应用程序
-
-```bash
-cd src
-python GUI.py
-```
-
-### 3. 界面操作
-
-1. **选择工作目录**：指定项目根目录（包含src/和data/的目录）
-2. **输入参数配置**：
-   - 实测河岸点的高程字段名（如"z"或"elevation"）
-   - 深泓线插值步长（默认2.0米）
-   - 河岸交点距离阈值（默认500.0米）
-   - 剖面横向插值步长（默认2.0米）
-3. **运行处理**：点击"开始处理"按钮
-4. **查看进度**：通过进度条和日志窗口监控处理状态
-5. **查看结果**：处理完成后在`data/result/`目录查看DEM文件
-
 ## 开发指南
 
 ### 代码风格
@@ -287,19 +259,6 @@ import logger
 import utils
 print('所有模块加载成功')
 "
-```
-
-### 代码质量检查
-
-```bash
-# 语法检查
-python -m py_compile src/*.py
-
-# 类型检查
-python -m mypy src/ --ignore-missing-imports
-
-# 代码格式化
-python -m autopep8 --in-place --aggressive --aggressive src/*.py
 ```
 
 ## 故障排除
