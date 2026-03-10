@@ -1,0 +1,36 @@
+# RC3DR GUI 路径配置文件
+
+此文件用于配置GUI模块中数据文件的默认路径。所有路径相对于项目根目录。
+
+## 配置说明
+
+- `data_dir`: 数据根目录
+- `raw_data_dir`: 原始数据目录
+- `intermediate_data_dir`: 中间数据目录
+- `output_dir`: 输出数据目录
+- `result_dir`: 结果目录
+
+## 自定义路径
+
+如需自定义路径，请修改以下配置项。路径格式：
+- 使用相对路径（推荐）：`data/raw_data`
+- 所有路径相对于项目根目录（包含此文件的目录）
+
+## 路径解析规则
+
+在GUI模块中使用 `../data/xxx` 格式的相对路径时：
+1. 系统会自动解析为项目根目录下的绝对路径
+2. 例如：`../data/raw_data/河岸线.shp` 会被解析为 `D:\0_user\hhu\RC3DR\data\raw_data\河岸线.shp`
+3. 无论从哪个目录启动GUI，都能正确找到数据文件
+
+## 默认配置
+
+```json
+{
+  "data_dir": "data",
+  "raw_data_dir": "data/raw_data",
+  "intermediate_data_dir": "data/intermediate_data",
+  "output_dir": "data/output",
+  "result_dir": "data/result"
+}
+```

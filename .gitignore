@@ -1,0 +1,19 @@
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 临时文件
+nul
+*~
+
+# 日志（可选，如果不想提交日志）
+# logs/
