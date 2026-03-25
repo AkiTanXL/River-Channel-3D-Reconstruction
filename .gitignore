@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+.mypy_cache/
 
 # IDE配置
 .idea/
@@ -16,4 +17,11 @@ nul
 *~
 
 # 日志（可选，如果不想提交日志）
-# logs/
+logs/
+
+# docs
+AGENTS.md
+RC3DR软件演示视频.mp4
+
+# dataset
+data/

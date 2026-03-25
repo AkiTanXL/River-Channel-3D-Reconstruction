@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metadata xml:lang="zh"><Esri><CreaDate>20260308</CreaDate><CreaTime>16021900</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="d:\program files (x86)\arcgis\desktop10.8\ArcToolbox\Toolboxes\3D Analyst Tools.tbx\TinRaster" Date="20260308" Time="160219">TinRaster TIN D:\0_user\hhu\RC3DR\data\result\DEM.tif FLOAT LINEAR "CELLSIZE 1" 1</Process></lineage></DataProperties></Esri></metadata>
